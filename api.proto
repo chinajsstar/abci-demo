@@ -1,0 +1,63 @@
+syntax="proto3";
+package abci-demo;
+
+//用户信息
+message User {
+    string    username           = 1;   //用户名
+    int64     age                = 2;   //用户密码
+    string    educate            = 3;   //学历
+    string    workstation        = 4;   //工作地
+}
+
+// 消息类型
+enum MessageType {
+    MsgError                 = 0;   // 信息出错
+    MsgInitPlatform          = 1;
+    MsgUserInfoOnChain       = 2;   // 用户信息上链
+}
+
+message Request {
+    oneof value{
+        RequestInitPlatform      initPlatform      = 1;        // 初始化平台
+        RequestUserInfoOnChain   userInfoOnChain     = 2;        // 添加账号
+    }
+    int64 instructionId     = 27;           // 随机数
+    bytes pubkey            = 28;           // 用户公钥
+    bytes sign              = 29;           // 签名
+    MessageType actionId    = 30;           // 消息类型
+}
+
+//初始化平台
+message RequestInitPlatform {
+    string  userName                = 1;     // 用户名
+    string  password                = 3;
+    bytes   userPublicKey           = 2;     // 用户公钥地址
+}
+
+message RequestUserInfoOnChain {
+    string    username           = 1;   //用户名
+    int64     age                = 2;   //用户密码
+    string    educate            = 3;   //学历
+    string    workstation        = 4;   //工作地
+}
+
+message Response {
+    oneof value {
+        ResponseInitPlatform      initPlatform      = 1;
+        ResponseUserInfoOnChain   userInfoOnChain   = 2;
+    }
+
+}
+
+message ResponseInitPlatform {
+    int64 instructionId     = 1;           // 随机数
+}
+
+message ResponseUserInfoOnChain {
+    int64 instructionId = 1;
+}
+
+message Receipt {
+    bool  isOk = 1;
+    bytes err  = 2;
+}
